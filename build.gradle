@@ -3,29 +3,32 @@ buildscript {
   ext.spring_boot_version = '1.3.6.RELEASE'
   repositories {
     mavenCentral()
+    maven { url 'http://repo.spring.io/plugins-release' }
   }
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
+    classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
   }
 }
 
 plugins {
   id "com.ewerk.gradle.plugins.querydsl" version "1.0.6"
 }
-apply plugin: "war"
 apply plugin: "kotlin"
 apply plugin: "application"
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
-ext {
-  querydslVersion = '3.7.4'
+configure(allprojects) {
+  apply plugin: 'propdeps'
+  apply plugin: 'propdeps-maven'
+  apply plugin: 'propdeps-idea'
+  apply plugin: 'propdeps-eclipse'
 }
 
-war {
-  baseName = 'myapp'
-  version =  '1.0.0'
+ext {
+  querydslVersion = '3.7.4'
 }
 
 sourceSets {
@@ -46,7 +49,7 @@ dependencies {
   compile "com.mysema.querydsl:querydsl-apt:$querydslVersion"
   compile "com.mysema.querydsl:querydsl-mongodb:$querydslVersion"
 
-  providedCompile files(project.buildDir.absolutePath + "/kotlin-classes/main")
+  provided files(project.buildDir.absolutePath + "/kotlin-classes/main")
 
   testCompile  'junit:junit:4.11'
   testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
