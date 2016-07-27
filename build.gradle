@@ -13,7 +13,7 @@ buildscript {
 plugins {
   id "com.ewerk.gradle.plugins.querydsl" version "1.0.6"
 }
-
+apply plugin: "war"
 apply plugin: "kotlin"
 apply plugin: "application"
 apply plugin: 'idea'
@@ -21,6 +21,11 @@ apply plugin: 'spring-boot'
 
 ext {
   querydslVersion = '3.7.4'
+}
+
+war {
+  baseName = 'myapp'
+  version =  '1.0.0'
 }
 
 sourceSets {
@@ -40,6 +45,8 @@ dependencies {
 
   compile "com.mysema.querydsl:querydsl-apt:$querydslVersion"
   compile "com.mysema.querydsl:querydsl-mongodb:$querydslVersion"
+
+  providedCompile files(project.buildDir.absolutePath + "/kotlin-classes/main")
 
   testCompile  'junit:junit:4.11'
   testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
